@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Middleware.Microservicio.Vuelos.Api/Middleware.Microservicio.Vuelos.Api.csproj" />
+    <Project Path="Middleware.Microservicio.Vuelos.Business/Middleware.Microservicio.Vuelos.Business.csproj" />
+    <Project Path="Middleware.Microservicio.Vuelos.DataAccess/Middleware.Microservicio.Vuelos.DataAccess.csproj" />
+    <Project Path="Middleware.Microservicio.Vuelos.DataManagement/Middleware.Microservicio.Vuelos.DataManagement.csproj" />
+  </Folder>
+</Solution>

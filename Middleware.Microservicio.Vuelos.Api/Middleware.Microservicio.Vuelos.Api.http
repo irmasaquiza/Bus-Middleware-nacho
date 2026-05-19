@@ -1,0 +1,6 @@
+@Middleware.Microservicio.Vuelos.Api_HostAddress = http://localhost:5258
+
+GET {{Middleware.Microservicio.Vuelos.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
