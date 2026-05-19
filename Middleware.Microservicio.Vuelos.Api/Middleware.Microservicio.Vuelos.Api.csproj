@@ -11,6 +11,7 @@
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
     <PackageReference Include="Google.Protobuf" Version="3.26.1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.62.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.62.0" />
     <PackageReference Include="Grpc.Tools" Version="2.62.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,5 +31,10 @@
     <ProjectReference Include="..\Middleware.Microservicio.Vuelos.DataAccess\Middleware.Microservicio.Vuelos.DataAccess.csproj" />
     <ProjectReference Include="..\Middleware.Microservicio.Vuelos.DataManagement\Middleware.Microservicio.Vuelos.DataManagement.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\reservas.proto" GrpcServices="Client" />
+  </ItemGroup>
+
 
 </Project>

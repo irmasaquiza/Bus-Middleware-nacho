@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option csharp_namespace = "Microservicio.ReservasF.Grpc";
+
+package reservas;
+
+// ── Servicio gRPC de Reservas ─────────────────────────────────────────────────
+service ReservasGrpc {
+    rpc CrearReserva (CrearReservaGrpcRequest) returns (ReservaGrpcResponse);
+    rpc PagarReserva (PagarReservaGrpcRequest) returns (ReservaGrpcResponse);
+    rpc GetReserva   (GetReservaGrpcRequest)   returns (ReservaGrpcResponse);
+    rpc CancelarReserva (CancelarReservaGrpcRequest) returns (ReservaGrpcResponse);
+}
+
+// ── Requests ──────────────────────────────────────────────────────────────────
+
+message CrearReservaGrpcRequest {
+    int32 id_cliente = 1;
+    int32 id_vuelo = 2;
+    string contacto_email = 3;
+    string contacto_telefono = 4;
+    string observaciones = 5;
+    string origen_canal = 6;
+    repeated DetalleReservaGrpc detalles = 7;
+}
+
+message DetalleReservaGrpc {
+    int32 id_pasajero = 1;
+    int32 id_asiento = 2;
+}
+
+message PagarReservaGrpcRequest {
+    int32 id_reserva = 1;
+    string modificado_por = 2;
+}
+
+message GetReservaGrpcRequest {
+    int32 id_reserva = 1;
+}
+
+message CancelarReservaGrpcRequest {
+    int32 id_reserva = 1;
+    string motivo = 2;
+    string modificado_por = 3;
+}
+
+// ── Response ──────────────────────────────────────────────────────────────────
+
+message ReservaGrpcResponse {
+    bool success = 1;
+    string message = 2;
+    int32 id_reserva = 3;
+    string codigo_reserva = 4;
+    string estado_reserva = 5;
+    int32 id_cliente = 6;
+    int32 id_vuelo = 7;
+    string contacto_email = 8;
+    string contacto_telefono = 9;
+    string observaciones = 10;
+    double subtotal_reserva = 11;
+    double valor_iva = 12;
+    double total_reserva = 13;
+    repeated DetalleReservaGrpc detalles = 14;
+}

@@ -1,5 +1,6 @@
 using Middleware.Vuelos.Api.Extensions;
 using Middleware.Vuelos.Api.Handlers;
+using Microservicio.ReservasF.Grpc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -16,6 +17,14 @@ builder.Services.AddAeropuertosHttpClient(builder.Configuration);
 builder.Services.AddClientesHttpClient(builder.Configuration);
 builder.Services.AddVuelosHttpClient(builder.Configuration);
 builder.Services.AddReservasFHttpClient(builder.Configuration);
+
+// gRPC Client — MS ReservasF
+builder.Services.AddGrpcClient<ReservasGrpc.ReservasGrpcClient>(options =>
+{
+    options.Address = new Uri(
+        builder.Configuration["Microservicios:ReservasFGrpcUrl"]!);
+});
+
 // JWT
 builder.Services.AddBusJwtAuthentication(builder.Configuration);
 

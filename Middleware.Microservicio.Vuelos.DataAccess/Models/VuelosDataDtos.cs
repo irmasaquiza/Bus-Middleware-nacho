@@ -117,6 +117,9 @@ public class EscalaDto
     [JsonPropertyName("orden")]
     public int Orden { get; set; }
 
+    [JsonPropertyName("aeropuerto")]          // ← agregar
+    public AeropuertoCortoDto? Aeropuerto { get; set; }  // ← agregar
+
     [JsonPropertyName("fechaHoraLlegada")]
     public DateTime FechaHoraLlegada { get; set; }
 
@@ -126,9 +129,8 @@ public class EscalaDto
     [JsonPropertyName("duracionMin")]
     public int DuracionMin { get; set; }
 
-    /// <summary>TECNICA | COMERCIAL</summary>
     [JsonPropertyName("tipoEscala")]
-    public string TipoEscala { get; set; } = null!;
+    public string? TipoEscala { get; set; }
 
     [JsonPropertyName("terminal")]
     public string? Terminal { get; set; }
@@ -140,12 +142,11 @@ public class EscalaDto
     public string? Observaciones { get; set; }
 
     [JsonPropertyName("estado")]
-    public string Estado { get; set; } = null!;
+    public string? Estado { get; set; }
 
     [JsonPropertyName("eliminado")]
     public bool Eliminado { get; set; }
 }
-
 // ------------------------------------------------------------
 // GET /api/v1/vuelos/{id_vuelo}/asientos/{id_asiento}
 // GET /api/v1/vuelos/{id_vuelo}/asientos

@@ -112,10 +112,12 @@ public partial class VuelosClient
 
         if (!response.IsSuccessStatusCode) return [];
         var body = await response.Content.ReadAsStringAsync();
+
+        // MS Vuelos devuelve {idVuelo, numeroVuelo, numEscalas, escalas}
         var apiResponse = JsonSerializer
-            .Deserialize<VuelosApiResponseDto<VuelosPagedResultDto<EscalaDto>>>(
+            .Deserialize<VuelosApiResponseDto<BookingEscalasResponseDto>>(
                 body, _jsonOptions);
-        return apiResponse?.Data?.Items ?? [];
+        return apiResponse?.Data?.Escalas ?? [];
     }
 
     /// <summary>
@@ -236,4 +238,19 @@ public class BookingVueloItemDto
     public string? EstadoVuelo { get; set; }
 
 
+}
+
+public class BookingEscalasResponseDto
+{
+    [JsonPropertyName("idVuelo")]
+    public int IdVuelo { get; set; }
+
+    [JsonPropertyName("numeroVuelo")]
+    public string NumeroVuelo { get; set; } = null!;
+
+    [JsonPropertyName("numEscalas")]
+    public int NumEscalas { get; set; }
+
+    [JsonPropertyName("escalas")]
+    public List<EscalaDto>? Escalas { get; set; }
 }
