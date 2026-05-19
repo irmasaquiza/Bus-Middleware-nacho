@@ -23,7 +23,7 @@ public class BookingBuscarVuelosRequest
 /// </summary>
 public class BookingBuscarAeropuertosRequest
 {
-    public string? Search { get; set; }
+    public string? Nombre { get; set; }  // ← cambiar Search por Nombre
     public int? IdPais { get; set; }
     public int Limit { get; set; } = 10;
 }

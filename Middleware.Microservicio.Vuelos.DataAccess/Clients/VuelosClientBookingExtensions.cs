@@ -21,7 +21,6 @@ public partial class VuelosClient
         DateTime? fechaSalida, int? cantidadPasajeros,
         string? clase, int page, int pageSize)
     {
-        // MS Vuelos usa Origen, Destino, Fecha — no los nombres del Bus
         var query = $"api/v1/booking/vuelos/buscar?Page={page}&Limit={pageSize}";
 
         if (!string.IsNullOrWhiteSpace(codigoIataOrigen)) query += $"&Origen={codigoIataOrigen}";
@@ -34,24 +33,38 @@ public partial class VuelosClient
         try { response = await _httpClient.GetAsync(query); }
         catch (HttpRequestException ex)
         {
-            throw new InvalidOperationException(
-                "No se pudo conectar con MS Vuelos.", ex);
+            throw new InvalidOperationException("No se pudo conectar con MS Vuelos.", ex);
         }
 
         if (!response.IsSuccessStatusCode) return null;
         var body = await response.Content.ReadAsStringAsync();
 
-        // MS Vuelos devuelve formato booking {meta, data} no {items}
-        // Deserializar diferente
         var apiResponse = JsonSerializer
             .Deserialize<VuelosApiResponseDto<VuelosBookingResponseDto>>(body, _jsonOptions);
 
         var bookingResponse = apiResponse?.Data;
         if (bookingResponse?.Data is null) return null;
 
+        // Mapear BookingVueloItemDto → VueloDto correctamente
+        var items = bookingResponse.Data.Select(v => new VueloDto
+        {
+            IdVuelo = v.IdVuelo,
+            NumeroVuelo = v.NumeroVuelo,
+            Origen = v.Origen,
+            Destino = v.Destino,
+            FechaHoraSalida = v.FechaHoraSalida,
+            FechaHoraLlegada = v.FechaHoraLlegada,
+            DuracionMin = v.DuracionMin,
+            PrecioBase = v.PrecioBase,
+            CapacidadTotal = v.AsientosDisponibles, // ← mapear asientosDisponibles
+            EstadoVuelo = v.EstadoVuelo ?? string.Empty,
+            Estado = null,
+            Eliminado = false
+        }).ToList();
+
         return new VuelosAdminPagedDto<VueloDto>
         {
-            Items = bookingResponse.Data,
+            Items = items,
             TotalRegistros = bookingResponse.Meta?.Total ?? 0,
             PaginaActual = bookingResponse.Meta?.Page ?? 1,
             TotalPaginas = (bookingResponse.Meta?.Total ?? 0) / (pageSize == 0 ? 20 : pageSize)
@@ -137,11 +150,11 @@ public partial class VuelosClient
     /// Público.
     /// </summary>
     public async Task<List<AeropuertoDto>> BookingBuscarAeropuertosAsync(
-        string? search, int? idPais, int limit)
+        string? nombre, int? idPais, int limit)
     {
         var query = $"api/v1/booking/aeropuertos?limit={limit}";
-        if (!string.IsNullOrWhiteSpace(search)) query += $"&search={search}";
-        if (idPais.HasValue) query += $"&id_pais={idPais}";
+        if (!string.IsNullOrWhiteSpace(nombre)) query += $"&nombre={nombre}";
+        if (idPais.HasValue) query += $"&idPais={idPais}";
 
         HttpResponseMessage response;
         try { response = await _httpClient.GetAsync(query); }
@@ -190,3 +203,37 @@ public partial class VuelosClient
 }
 
 // ── DTOs de Booking ───────────────────────────────────────────────────────────
+public class BookingVueloItemDto
+{
+    [JsonPropertyName("idVuelo")]
+    public int IdVuelo { get; set; }
+
+    [JsonPropertyName("numeroVuelo")]
+    public string NumeroVuelo { get; set; } = null!;
+
+    [JsonPropertyName("origen")]
+    public AeropuertoCortoDto? Origen { get; set; }
+
+    [JsonPropertyName("destino")]
+    public AeropuertoCortoDto? Destino { get; set; }
+
+    [JsonPropertyName("fechaHoraSalida")]
+    public DateTime FechaHoraSalida { get; set; }
+
+    [JsonPropertyName("fechaHoraLlegada")]
+    public DateTime FechaHoraLlegada { get; set; }
+
+    [JsonPropertyName("duracionMin")]
+    public int DuracionMin { get; set; }
+
+    [JsonPropertyName("precioBase")]
+    public decimal PrecioBase { get; set; }
+
+    [JsonPropertyName("asientosDisponibles")]
+    public int AsientosDisponibles { get; set; }
+
+    [JsonPropertyName("estadoVuelo")]
+    public string? EstadoVuelo { get; set; }
+
+
+}

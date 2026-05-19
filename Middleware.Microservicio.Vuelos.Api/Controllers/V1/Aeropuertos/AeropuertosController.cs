@@ -19,6 +19,10 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Aeropuertos
             _aeropuertosClient = aeropuertosClient;
         }
 
+
+
+
+
         /// <summary>
         /// Lista aeropuertos con filtros y paginación.
         /// GET /api/v1/aeropuertos

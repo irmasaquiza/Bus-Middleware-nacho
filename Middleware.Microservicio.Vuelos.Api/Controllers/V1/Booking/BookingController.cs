@@ -167,7 +167,7 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Booking
             [FromQuery] BookingBuscarAeropuertosRequest request)
         {
             var result = await _vuelosClient.BookingBuscarAeropuertosAsync(
-                request.Search, request.IdPais, request.Limit);
+                request.Nombre, request.IdPais, request.Limit);  // ← request.Nombre
             return Ok(new { success = true, data = result });
         }
 

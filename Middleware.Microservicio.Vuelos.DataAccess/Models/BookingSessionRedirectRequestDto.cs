@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Middleware.Vuelos.DataAccess.Clients;
+using System.Text.Json.Serialization;
 
 namespace Middleware.Vuelos.DataAccess.Models
 {
@@ -33,7 +34,7 @@ namespace Middleware.Vuelos.DataAccess.Models
         public VuelosBookingMetaDto? Meta { get; set; }
 
         [JsonPropertyName("data")]
-        public List<VueloDto>? Data { get; set; }
+        public List<BookingVueloItemDto>? Data { get; set; }
     }
 
     public class VuelosBookingMetaDto
