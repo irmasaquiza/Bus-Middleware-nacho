@@ -248,7 +248,7 @@ public partial class ReservasFClient : IReservasFClient
     public async Task<List<BoletoDto>> GetBoletosByReservaAsync(
         int idReserva, string jwtToken)
     {
-        var endpoint = $"api/v1/boletos?idReserva={idReserva}";
+        var endpoint = $"api/v1/boletos?id_reserva={idReserva}";
 
         using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
         request.Headers.Authorization =
@@ -308,9 +308,9 @@ public partial class ReservasFClient : IReservasFClient
     public async Task<FacturaDto?> GetFacturaByReservaAsync(
         int idReserva, string jwtToken)
     {
-        var endpoint = $"api/v1/facturas?idReserva={idReserva}";
+        var query = $"api/v1/facturas?id_reserva={idReserva}&page=1&page_size=1";
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+        using var request = new HttpRequestMessage(HttpMethod.Get, query);
         request.Headers.Authorization =
             new AuthenticationHeaderValue("Bearer", jwtToken);
 
@@ -326,9 +326,10 @@ public partial class ReservasFClient : IReservasFClient
 
         var body = await response.Content.ReadAsStringAsync();
         var apiResponse = JsonSerializer
-            .Deserialize<ReservasApiResponseDto<FacturaDto>>(body, _jsonOptions);
+            .Deserialize<ReservasApiResponseDto<ReservasFPagedDto<FacturaDto>>>(
+                body, _jsonOptions);
 
-        return apiResponse?.Success == true ? apiResponse.Data : null;
+        return apiResponse?.Data?.Items?.FirstOrDefault();
     }
 
     // ── EQUIPAJE ─────────────────────────────────────────────────────────────────

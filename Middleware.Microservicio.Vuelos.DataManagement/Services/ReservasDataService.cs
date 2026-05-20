@@ -164,6 +164,71 @@ public class ReservasDataService : IReservasDataService
         return dtos.Select(MapBoletoToModel).ToList();
     }
 
+    /// <inheritdoc />
+    public async Task<List<ReservaDataModel>> GetReservasByClienteAsync(
+        int idCliente, string jwtToken)
+    {
+        var paged = await _reservasFClient.GetReservasPagedAsync(
+            idCliente: idCliente,
+            idVuelo: null,
+            codigoReserva: null,
+            estadoReserva: null,
+            page: 1,
+            pageSize: 100,
+            jwtToken: jwtToken);
+
+        return paged?.Items?.Select(MapReservaToModel).ToList() ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<ReservaDataModel?> GetReservaPorCodigoAsync(
+        string codigoReserva, string jwtToken)
+    {
+        var paged = await _reservasFClient.GetReservasPagedAsync(
+            idCliente: null,
+            idVuelo: null,
+            codigoReserva: codigoReserva,
+            estadoReserva: null,
+            page: 1,
+            pageSize: 1,
+            jwtToken: jwtToken);
+
+        var dto = paged?.Items?.FirstOrDefault();
+        return dto is null ? null : MapReservaToModel(dto);
+    }
+
+    /// <inheritdoc />
+    public async Task<List<BoletoDataModel>> GetBoletosByClienteAsync(
+        int idCliente, string jwtToken)
+    {
+        var paged = await _reservasFClient.GetBoletosPagedAsync(
+            idReserva: null,
+            idVuelo: null,
+            codigoBoleto: null,
+            estadoBoleto: null,
+            page: 1,
+            pageSize: 100,
+            jwtToken: jwtToken);
+
+        return paged?.Items?.Select(MapBoletoToModel).ToList() ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<List<FacturaDataModel>> GetFacturasByClienteAsync(
+        int idCliente, string jwtToken)
+    {
+        var paged = await _reservasFClient.GetFacturasPagedAsync(
+            idCliente: idCliente,
+            idReserva: null,
+            numeroFactura: null,
+            estadoFactura: null,
+            page: 1,
+            pageSize: 100,
+            jwtToken: jwtToken);
+
+        return paged?.Items?.Select(MapFacturaToModel).ToList() ?? [];
+    }
+
     // ── FACTURAS ─────────────────────────────────────────────────────────────────
 
     /// <inheritdoc />
@@ -301,4 +366,6 @@ public class ReservasDataService : IReservasDataService
         EstadoEquipaje = dto.EstadoEquipaje,
         EsEliminado = dto.EsEliminado
     };
+
+
 }

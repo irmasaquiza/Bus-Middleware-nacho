@@ -103,4 +103,28 @@ public interface IReservasFClient
         int idBoleto,
         AgregarEquipajeRequestDto request,
         string jwtToken);
+
+    /// <summary>
+    /// Obtiene reservas paginadas con filtros.
+    /// GET /api/v1/reservas
+    /// </summary>
+    Task<ReservasFPagedDto<ReservaDto>?> GetReservasPagedAsync(
+        int? idCliente, int? idVuelo, string? codigoReserva,
+        string? estadoReserva, int page, int pageSize, string jwtToken);
+
+    /// <summary>
+    /// Obtiene boletos paginados con filtros.
+    /// GET /api/v1/boletos
+    /// </summary>
+    Task<ReservasFPagedDto<BoletoDto>?> GetBoletosPagedAsync(
+        int? idReserva, int? idVuelo, string? codigoBoleto,
+        string? estadoBoleto, int page, int pageSize, string jwtToken);
+
+    /// <summary>
+    /// Obtiene facturas paginadas con filtros.
+    /// GET /api/v1/facturas
+    /// </summary>
+    Task<ReservasFPagedDto<FacturaDto>?> GetFacturasPagedAsync(
+        int? idCliente, int? idReserva, string? numeroFactura,
+        string? estadoFactura, int page, int pageSize, string jwtToken);
 }

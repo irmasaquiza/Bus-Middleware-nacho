@@ -107,4 +107,30 @@ public interface IReservasDataService
         string? descripcion,
         string? dimensionesCm,
         string jwtToken);
+
+    /// <summary>
+    /// Obtiene todas las reservas de un cliente.
+    /// </summary>
+    Task<List<ReservaDataModel>> GetReservasByClienteAsync(
+        int idCliente, string jwtToken);
+
+    /// <summary>
+    /// Obtiene una reserva por su código.
+    /// </summary>
+    Task<ReservaDataModel?> GetReservaPorCodigoAsync(
+        string codigoReserva, string jwtToken);
+
+    /// <summary>
+    /// Obtiene todos los boletos de un cliente.
+    /// </summary>
+    Task<List<BoletoDataModel>> GetBoletosByClienteAsync(
+        int idCliente, string jwtToken);
+
+    /// <summary>
+    /// Obtiene todas las facturas de un cliente.
+    /// </summary>
+    Task<List<FacturaDataModel>> GetFacturasByClienteAsync(
+        int idCliente, string jwtToken);
 }
+
+

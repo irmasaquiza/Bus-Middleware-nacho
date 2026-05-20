@@ -60,7 +60,7 @@ public static class PortalClienteMapper
         List<AsientoDataModel> asientos,
         string codigoReserva)
     {
-        var asiento = asientos.FirstOrDefault(a => a.IdAsiento == boleto.IdAsiento);
+        var asiento = asientos?.FirstOrDefault(a => a.IdAsiento == boleto.IdAsiento);
 
         return new BoletoPortalResponse
         {

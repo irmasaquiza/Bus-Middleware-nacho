@@ -39,12 +39,11 @@ public class PortalClienteOrchestrator : IPortalClienteOrchestrator
             "[Bus][PortalClienteOrchestrator] GetMisReservas. IdCliente={IdCliente}",
             idCliente);
 
-        // MS ReservasF filtra por cliente cuando el JWT tiene rol CLIENTE
-        // El Bus reenvía el JWT original del cliente
-        // Por ahora obtenemos la lista vacía si no hay reservas
-        // TODO: implementar endpoint GET /reservas?idCliente={id} en MS ReservasF
-        throw new BusinessException(
-            "Listado de reservas del cliente no implementado aún.");
+        var reservas = await _reservasDataService.GetReservasByClienteAsync(
+            idCliente, jwtToken);
+
+        return reservas.Select(r =>
+            PortalClienteMapper.ToReservaPortalResponse(r, null)).ToList();
     }
 
     /// <inheritdoc />
@@ -80,9 +79,17 @@ public class PortalClienteOrchestrator : IPortalClienteOrchestrator
             "CodigoReserva={CodigoReserva} IdCliente={IdCliente}",
             codigoReserva, idCliente);
 
-        // TODO: implementar GetByCodigoAsync en IReservasDataService
-        throw new BusinessException(
-            "Búsqueda por código de reserva no implementada aún.");
+        var reserva = await _reservasDataService.GetReservaPorCodigoAsync(
+            codigoReserva, jwtToken)
+            ?? throw new NotFoundException(
+                $"No se encontró reserva con código {codigoReserva}.");
+
+        if (reserva.IdCliente != idCliente)
+            throw new UnauthorizedBusinessException(
+                "No tienes permiso para ver esta reserva.");
+
+        var vuelo = await _vuelosDataService.GetVueloByIdAsync(reserva.IdVuelo);
+        return PortalClienteMapper.ToReservaPortalResponse(reserva, vuelo);
     }
 
     /// <inheritdoc />
@@ -119,9 +126,11 @@ public class PortalClienteOrchestrator : IPortalClienteOrchestrator
             "[Bus][PortalClienteOrchestrator] GetMisBoletos. IdCliente={IdCliente}",
             idCliente);
 
-        // TODO: implementar endpoint GET /boletos?idCliente={id} en MS ReservasF
-        throw new BusinessException(
-            "Listado de boletos del cliente no implementado aún.");
+        var boletos = await _reservasDataService.GetBoletosByClienteAsync(
+            idCliente, jwtToken);
+
+        return boletos.Select(b =>
+            PortalClienteMapper.ToBoletoPortalResponse(b, null, [], null)).ToList();
     }
 
     /// <inheritdoc />
@@ -165,8 +174,10 @@ public class PortalClienteOrchestrator : IPortalClienteOrchestrator
             "[Bus][PortalClienteOrchestrator] GetMisFacturas. IdCliente={IdCliente}",
             idCliente);
 
-        // TODO: implementar endpoint GET /facturas?idCliente={id} en MS ReservasF
-        throw new BusinessException(
-            "Listado de facturas del cliente no implementado aún.");
+        var facturas = await _reservasDataService.GetFacturasByClienteAsync(
+            idCliente, jwtToken);
+
+        return facturas.Select(f =>
+            PortalClienteMapper.ToFacturaPortalResponse(f, null)).ToList();
     }
 }
