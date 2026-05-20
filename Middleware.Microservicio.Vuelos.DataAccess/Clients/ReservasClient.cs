@@ -131,17 +131,17 @@ public partial class ReservasFClient : IReservasFClient
     }
 
     /// <inheritdoc />
-    public async Task<ReservaDto?> PagarReservaAsync(int idReserva, string jwtToken)
+    public async Task<ReservaDto?> PagarReservaAsync(
+        int idReserva,
+        PagarReservaRequestDto request,
+        string jwtToken)
     {
         var endpoint = $"api/v1/reservas/{idReserva}/pagar";
 
         using var requestMessage = new HttpRequestMessage(HttpMethod.Patch, endpoint);
         requestMessage.Headers.Authorization =
             new AuthenticationHeaderValue("Bearer", jwtToken);
-
-        // ← Agregar esta línea — body vacío con Content-Type correcto
-        requestMessage.Content = new StringContent(
-            "{}", System.Text.Encoding.UTF8, "application/json");
+        requestMessage.Content = JsonContent.Create(request);  // ← enviar request completo
 
         HttpResponseMessage response;
         try { response = await _httpClient.SendAsync(requestMessage); }

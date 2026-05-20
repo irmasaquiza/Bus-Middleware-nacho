@@ -41,7 +41,10 @@ public interface IReservasFClient
     /// Este es el endpoint más crítico para el Bus — coordina
     /// reserva, factura, boletos y disponibilidad de asientos en MS Vuelos.
     /// </summary>
-    Task<ReservaDto?> PagarReservaAsync(int idReserva, string jwtToken);
+    Task<ReservaDto?> PagarReservaAsync(
+    int idReserva,
+    PagarReservaRequestDto request,
+    string jwtToken);
 
     /// <summary>
     /// Cancela una reserva.

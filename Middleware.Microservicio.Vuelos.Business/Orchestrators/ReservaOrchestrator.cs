@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Middleware.Vuelos.Business.Exceptions;
-using Middleware.Vuelos.Business.Mappers;
 using Middleware.Vuelos.Business.DTOs.Reservas;
+using Middleware.Vuelos.Business.Exceptions;
 using Middleware.Vuelos.Business.Interfaces;
+using Middleware.Vuelos.Business.Mappers;
+using Middleware.Vuelos.DataAccess.Models;
 using Middleware.Vuelos.DataManagement.Interfaces;
 
 namespace Middleware.Vuelos.Business.Orchestrators;
@@ -83,10 +84,20 @@ public class ReservaOrchestrator : IReservaOrchestrator
             idVuelo: request.IdVuelo,
             fechaInicio: vuelo.FechaHoraSalida,
             fechaFin: vuelo.FechaHoraLlegada,
+            subtotalReserva: request.SubtotalReserva,   // ← agregar
+            valorIva: request.ValorIva,           // ← agregar
+            totalReserva: request.TotalReserva,       // ← agregar
             contactoEmail: request.ContactoEmail,
             contactoTelefono: request.ContactoTelefono,
             observaciones: request.Observaciones,
-            detalles: detalles,
+            detalles: request.Detalles
+                .Select(d => (
+                    d.IdPasajero,
+                    d.IdAsiento,
+                    d.SubtotalLinea,   // ← agregar
+                    d.ValorIvaLinea,   // ← agregar
+                    d.TotalLinea       // ← agregar
+                )).ToList(),
             jwtToken: jwtToken)
             ?? throw new BusinessException("No se pudo crear la reserva. Intente nuevamente.");
 
@@ -101,37 +112,32 @@ public class ReservaOrchestrator : IReservaOrchestrator
     /// <inheritdoc />
     public async Task<ReservaResponse> PagarReservaAsync(
         int idReserva,
+        PagarReservaRequest request,
         string jwtToken)
     {
-        _logger.LogInformation(
-            "[Bus][ReservaOrchestrator] PagarReserva iniciado. IdReserva={IdReserva}",
-            idReserva);
-
-        // ── 1. Validar que la reserva existe y está en estado pagable ────────────
         var reserva = await _reservasDataService.ValidarReservaPagableAsync(
             idReserva, jwtToken)
             ?? throw new BusinessException(
                 $"La reserva {idReserva} no existe o no está en estado pagable.");
 
-        // ── 2. Procesar el pago en MS ReservasF ──────────────────────────────────
-        // MS ReservasF crea la factura, los boletos y bloquea los asientos internamente.
+        var pagarDto = new PagarReservaRequestDto
+        {
+            CargoServicio = request.CargoServicio,
+            Equipaje = request.Equipaje.Select(e => new PagarReservaEquipajeDto
+            {
+                IdDetalle = e.IdDetalle,
+                Tipo = e.Tipo,
+                PesoKg = e.PesoKg,
+                DescripcionEquipaje = e.DescripcionEquipaje
+            }).ToList()
+        };
+
         var reservaPagada = await _reservasDataService.PagarReservaAsync(
-            idReserva, jwtToken);
+            idReserva, pagarDto, jwtToken);
 
         if (reservaPagada is null)
-        {
-            _logger.LogError(
-                "[Bus][ReservaOrchestrator] PagarReserva falló en MS ReservasF. " +
-                "IdReserva={IdReserva}", idReserva);
             throw new BusinessException(
                 "No se pudo procesar el pago de la reserva. Intente nuevamente.");
-        }
-
-        // ── Paso 3 eliminado — MS ReservasF bloquea los asientos internamente ───
-
-        _logger.LogInformation(
-            "[Bus][ReservaOrchestrator] PagarReserva completado. IdReserva={IdReserva}",
-            idReserva);
 
         return ReservasBusinessMapper.ToReservaResponse(reservaPagada);
     }

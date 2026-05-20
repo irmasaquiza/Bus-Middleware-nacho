@@ -13,6 +13,10 @@ public class CrearReservaRequest
     public string? ContactoTelefono { get; set; }
     public string? Observaciones { get; set; }
 
+    public decimal SubtotalReserva { get; set; }  // ← agregar
+    public decimal ValorIva { get; set; }          // ← agregar
+    public decimal TotalReserva { get; set; }      // ← agregar
+
     /// <summary>
     /// Lista de pasajeros con su asiento asignado.
     /// </summary>

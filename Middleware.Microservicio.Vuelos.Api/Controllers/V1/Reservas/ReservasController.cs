@@ -122,10 +122,13 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Reservas
         /// </summary>
         [HttpPatch("{id_reserva:int}/pagar")]
         [Authorize(Roles = "ADMINISTRADOR,AEROLINEA,CLIENTE")]
-        public async Task<IActionResult> Pagar([FromRoute] int id_reserva)
+        public async Task<IActionResult> Pagar(
+            [FromRoute] int id_reserva,
+            [FromBody] PagarReservaRequest request)  // ← agregar body
         {
             var token = ObtenerToken();
-            var result = await _reservaOrchestrator.PagarReservaAsync(id_reserva, token);
+            var result = await _reservaOrchestrator.PagarReservaAsync(
+                id_reserva, request, token);
             return Ok(new { success = true, message = "Pago procesado correctamente.", data = result });
         }
 

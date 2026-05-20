@@ -1,4 +1,5 @@
-﻿using Middleware.Vuelos.DataManagement.Models.Reservas;
+﻿using Middleware.Vuelos.DataAccess.Models;
+using Middleware.Vuelos.DataManagement.Models.Reservas;
 
 namespace Middleware.Vuelos.DataManagement.Interfaces;
 
@@ -35,10 +36,13 @@ public interface IReservasDataService
         int idVuelo,
         DateTime fechaInicio,
         DateTime fechaFin,
+        decimal subtotalReserva,
+        decimal valorIva,
+        decimal totalReserva,
         string? contactoEmail,
         string? contactoTelefono,
         string? observaciones,
-        List<(int idPasajero, int idAsiento)> detalles,
+        List<(int idPasajero, int idAsiento, decimal subtotalLinea, decimal valorIvaLinea, decimal totalLinea)> detalles,
         string jwtToken);
 
     /// <summary>
@@ -46,7 +50,10 @@ public interface IReservasDataService
     /// MS ReservasF crea la factura y los boletos internamente.
     /// El Bus debe bloquear los asientos en MS Vuelos después de este paso.
     /// </summary>
-    Task<ReservaDataModel?> PagarReservaAsync(int idReserva, string jwtToken);
+    Task<ReservaDataModel?> PagarReservaAsync(
+    int idReserva,
+    PagarReservaRequestDto request,
+    string jwtToken);
 
     /// <summary>
     /// Cancela una reserva.

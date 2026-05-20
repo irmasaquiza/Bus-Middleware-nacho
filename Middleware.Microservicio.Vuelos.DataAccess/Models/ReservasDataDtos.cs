@@ -140,6 +140,15 @@ public class CrearReservaRequestDto
     [JsonPropertyName("fecha_fin")]
     public DateTime FechaFin { get; set; }
 
+    [JsonPropertyName("subtotal_reserva")]
+    public decimal SubtotalReserva { get; set; }  // ← agregar
+
+    [JsonPropertyName("valor_iva")]
+    public decimal ValorIva { get; set; }  // ← agregar
+
+    [JsonPropertyName("total_reserva")]
+    public decimal TotalReserva { get; set; }  // ← agregar
+
     [JsonPropertyName("origen_canal_reserva")]
     public string OrigenCanalReserva { get; set; } = "BUS";
 
@@ -163,6 +172,15 @@ public class CrearReservaDetalleDto
 
     [JsonPropertyName("id_asiento")]
     public int IdAsiento { get; set; }
+
+    [JsonPropertyName("subtotal_linea")]
+    public decimal SubtotalLinea { get; set; }  // ← agregar
+
+    [JsonPropertyName("valor_iva_linea")]
+    public decimal ValorIvaLinea { get; set; }  // ← agregar
+
+    [JsonPropertyName("total_linea")]
+    public decimal TotalLinea { get; set; }  // ← agregar
 }
 
 // ------------------------------------------------------------
@@ -352,4 +370,28 @@ public class ReservasApiResponseDto<T>
 
     [JsonPropertyName("errors")]
     public List<string> Errors { get; set; } = [];
+}
+
+public class PagarReservaRequestDto
+{
+    [JsonPropertyName("cargo_servicio")]
+    public decimal CargoServicio { get; set; }
+
+    [JsonPropertyName("equipaje")]
+    public List<PagarReservaEquipajeDto> Equipaje { get; set; } = [];
+}
+
+public class PagarReservaEquipajeDto
+{
+    [JsonPropertyName("id_detalle")]
+    public int IdDetalle { get; set; }
+
+    [JsonPropertyName("tipo")]
+    public string Tipo { get; set; } = null!;
+
+    [JsonPropertyName("peso_kg")]
+    public decimal PesoKg { get; set; }
+
+    [JsonPropertyName("descripcion_equipaje")]
+    public string? DescripcionEquipaje { get; set; }
 }

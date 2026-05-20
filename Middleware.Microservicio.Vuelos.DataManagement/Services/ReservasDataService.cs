@@ -39,10 +39,13 @@ public class ReservasDataService : IReservasDataService
         int idVuelo,
         DateTime fechaInicio,
         DateTime fechaFin,
+        decimal subtotalReserva,
+        decimal valorIva,
+        decimal totalReserva,
         string? contactoEmail,
         string? contactoTelefono,
         string? observaciones,
-        List<(int idPasajero, int idAsiento)> detalles,
+        List<(int idPasajero, int idAsiento, decimal subtotalLinea, decimal valorIvaLinea, decimal totalLinea)> detalles,
         string jwtToken)
     {
         _logger.LogInformation(
@@ -56,6 +59,9 @@ public class ReservasDataService : IReservasDataService
             IdVuelo = idVuelo,
             FechaInicio = fechaInicio,
             FechaFin = fechaFin,
+            SubtotalReserva = subtotalReserva,  // ← agregar
+            ValorIva = valorIva,          // ← agregar
+            TotalReserva = totalReserva,      // ← agregar
             OrigenCanalReserva = "WEB",
             ContactoEmail = contactoEmail,
             ContactoTelefono = contactoTelefono,
@@ -64,7 +70,10 @@ public class ReservasDataService : IReservasDataService
                 .Select(d => new CrearReservaDetalleDto
                 {
                     IdPasajero = d.idPasajero,
-                    IdAsiento = d.idAsiento
+                    IdAsiento = d.idAsiento, 
+                    SubtotalLinea = d.subtotalLinea,  // ← agregar
+                    ValorIvaLinea = d.valorIvaLinea,  // ← agregar
+                    TotalLinea = d.totalLinea      // ← agregar
                 })
                 .ToList()
         };
@@ -75,13 +84,15 @@ public class ReservasDataService : IReservasDataService
 
     /// <inheritdoc />
     public async Task<ReservaDataModel?> PagarReservaAsync(
-        int idReserva, string jwtToken)
+        int idReserva,
+        PagarReservaRequestDto request,
+        string jwtToken)
     {
         _logger.LogInformation(
             "[Bus][ReservasDataService] PagarReserva. IdReserva={IdReserva}",
             idReserva);
 
-        var dto = await _reservasFClient.PagarReservaAsync(idReserva, jwtToken);
+        var dto = await _reservasFClient.PagarReservaAsync(idReserva, request, jwtToken);
 
         if (dto is null)
         {

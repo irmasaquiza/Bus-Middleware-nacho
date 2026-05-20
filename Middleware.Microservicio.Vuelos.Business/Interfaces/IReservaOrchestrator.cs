@@ -27,6 +27,7 @@ public interface IReservaOrchestrator
     /// </summary>
     Task<ReservaResponse> PagarReservaAsync(
         int idReserva,
+        PagarReservaRequest request,
         string jwtToken);
 
     /// <summary>

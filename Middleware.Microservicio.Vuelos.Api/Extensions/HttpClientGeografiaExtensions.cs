@@ -48,7 +48,7 @@ public static class HttpClientGeografiaExtensions
         {
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.Timeout = TimeSpan.FromSeconds(30);
+            client.Timeout = TimeSpan.FromSeconds(50);
         }).AddHttpMessageHandler<TokenForwardingHandler>(); // ✅ agregar esto
 
 
