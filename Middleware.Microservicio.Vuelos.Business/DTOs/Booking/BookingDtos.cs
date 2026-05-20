@@ -35,7 +35,6 @@ public class BookingBuscarAeropuertosRequest
 public class BookingSessionRedirectRequest
 {
     public int IdVuelo { get; set; }
-    public List<int> IdAsientos { get; set; } = [];
     public string UrlRetorno { get; set; } = null!;
 }
 

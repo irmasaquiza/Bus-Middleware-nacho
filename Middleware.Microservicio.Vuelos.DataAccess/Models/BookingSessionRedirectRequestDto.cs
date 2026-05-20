@@ -8,9 +8,6 @@ namespace Middleware.Vuelos.DataAccess.Models
         [JsonPropertyName("idVuelo")]
         public int IdVuelo { get; set; }
 
-        [JsonPropertyName("idAsientos")]
-        public List<int> IdAsientos { get; set; } = [];
-
         [JsonPropertyName("urlRetorno")]
         public string UrlRetorno { get; set; } = null!;
     }

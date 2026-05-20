@@ -185,7 +185,6 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Booking
             var dto = new BookingSessionRedirectRequestDto
             {
                 IdVuelo = request.IdVuelo,
-                IdAsientos = request.IdAsientos,
                 UrlRetorno = request.UrlRetorno
             };
 
