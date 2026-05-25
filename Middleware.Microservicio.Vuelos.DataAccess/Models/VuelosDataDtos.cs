@@ -69,6 +69,9 @@ public class VueloDto
 
     [JsonPropertyName("eliminado")]
     public bool Eliminado { get; set; }
+
+    [JsonPropertyName("disponibilidadPorClase")]
+    public List<DisponibilidadPorClaseDto>? DisponibilidadPorClase { get; set; }
 }
 
 public class AeropuertoCortoDto
@@ -248,3 +251,16 @@ public class BookingAsientosResumenDto
     [JsonPropertyName("ocupados")]
     public int Ocupados { get; set; }
 }
+
+public class DisponibilidadPorClaseDto
+{
+    [JsonPropertyName("clase")]
+    public string Clase { get; set; } = null!;
+
+    [JsonPropertyName("asientosDisponibles")]
+    public int AsientosDisponibles { get; set; }
+
+    [JsonPropertyName("precioBase")]
+    public decimal PrecioBase { get; set; }
+}
+

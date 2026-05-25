@@ -110,6 +110,7 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Booking
                 DuracionMin = vuelo.DuracionMin,
                 PrecioBase = vuelo.PrecioBase,
                 CapacidadTotal = vuelo.CapacidadTotal,
+                AsientosDisponibles = vuelo.DisponibilidadPorClase?.Sum(d => d.AsientosDisponibles) ?? 0, // ← agregar
                 EstadoVuelo = vuelo.EstadoVuelo,
                 Escalas = escalas.Select(e => new BookingEscalaResponse
                 {
@@ -177,7 +178,7 @@ namespace Middleware.Vuelos.Api.Controllers.V1.Booking
         /// Rol: BOOKING
         /// </summary>
         [HttpPost("vuelos/sesion-redirect")]
-        [Authorize(Roles = "BOOKING")]
+        [AllowAnonymous]
         public async Task<IActionResult> SesionRedirect(
             [FromBody] BookingSessionRedirectRequest request)
         {
