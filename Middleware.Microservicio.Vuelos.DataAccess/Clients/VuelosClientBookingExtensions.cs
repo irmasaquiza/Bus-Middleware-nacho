@@ -57,6 +57,7 @@ public partial class VuelosClient
             DuracionMin = v.DuracionMin,
             PrecioBase = v.PrecioBase,
             CapacidadTotal = v.AsientosDisponibles, // ← mapear asientosDisponibles
+            AsientosDisponibles = v.AsientosDisponibles, // ← agregar
             EstadoVuelo = v.EstadoVuelo ?? string.Empty,
             Estado = null,
             Eliminado = false

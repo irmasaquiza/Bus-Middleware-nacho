@@ -20,7 +20,7 @@ public static class HttpClientReservasFExtensions
         {
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.Timeout = TimeSpan.FromSeconds(60);
+            client.Timeout = TimeSpan.FromSeconds(180);
         }).AddHttpMessageHandler<TokenForwardingHandler>(); // ✅ agregar esto
 
 
@@ -28,7 +28,7 @@ public static class HttpClientReservasFExtensions
         {
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.Timeout = TimeSpan.FromSeconds(60); // ← 60s igual que el original
+            client.Timeout = TimeSpan.FromSeconds(180); // ← 60s igual que el original
         }).AddHttpMessageHandler<TokenForwardingHandler>(); // ✅ agregar esto
 
 

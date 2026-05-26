@@ -61,6 +61,11 @@ public class VueloDto
     [JsonPropertyName("capacidadTotal")]
     public int CapacidadTotal { get; set; }
 
+    [JsonPropertyName("asientosDisponibles")]  // ← agregar
+    public int AsientosDisponibles { get; set; }  // ← agregar
+
+
+
     [JsonPropertyName("estadoVuelo")]
     public string EstadoVuelo { get; set; } = null!;
 
